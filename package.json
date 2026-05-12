@@ -4,20 +4,24 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev --turbopack",
+    "dev:webpack": "cross-env NODE_OPTIONS=--no-deprecation next dev --no-turbopack",
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
     "lint": "eslint .",
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
+    "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
+    "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
     "ci": "payload migrate && pnpm build"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
-    "@payloadcms/db-vercel-postgres": "^3.82.1",
-    "@payloadcms/next": "^3.82.1",
-    "@payloadcms/richtext-lexical": "^3.82.1",
-    "@payloadcms/storage-vercel-blob": "^3.82.1",
+    "@payloadcms/db-vercel-postgres": "3.84.1",
+    "@payloadcms/email-resend": "3.84.1",
+    "@payloadcms/next": "3.84.1",
+    "@payloadcms/richtext-lexical": "3.84.1",
+    "@payloadcms/storage-vercel-blob": "3.84.1",
     "@radix-ui/react-accordion": "1.2.12",
     "@radix-ui/react-alert-dialog": "1.1.15",
     "@radix-ui/react-aspect-ratio": "1.1.8",
@@ -59,10 +63,10 @@
     "lucide-react": "^0.564.0",
     "next": "16.2.4",
     "next-themes": "^0.4.6",
-    "payload": "^3.82.1",
-    "react": "^19",
+    "payload": "3.84.1",
+    "react": "19.2.4",
     "react-day-picker": "9.13.2",
-    "react-dom": "^19",
+    "react-dom": "19.2.4",
     "react-hook-form": "^7.54.1",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.0",
@@ -73,7 +77,11 @@
     "zod": "^3.24.1"
   },
   "pnpm": {
-    "onlyBuiltDependencies": ["sharp", "esbuild", "bufferutil"]
+    "onlyBuiltDependencies": [
+      "sharp",
+      "esbuild",
+      "bufferutil"
+    ]
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.2.0",

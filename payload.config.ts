@@ -1,5 +1,6 @@
 import { vercelPostgresAdapter } from '@payloadcms/db-vercel-postgres'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
+import { resendAdapter } from '@payloadcms/email-resend'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { buildConfig } from 'payload'
 import sharp from 'sharp'
@@ -32,15 +33,21 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || process.env.POSTGRES_URL || '',
     },
+    push: process.env.NODE_ENV !== 'production',
   }),
   collections: [Users, Media, TrainingAreas, Testimonials, ContactSubmissions],
   globals: [SiteSettings, HomePage, AboutPage, ConsultancyPage, PricingPage],
   plugins: [
     vercelBlobStorage({
       collections: { media: true },
-      token: process.env.BLOB_READ_WRITE_TOKEN || '',
+      token: process.env.BLOB_READ_WRITE_TOKEN,
     }),
   ],
+  email: resendAdapter({
+    defaultFromAddress: process.env.EMAIL_FROM || 'noreply@justinaxontraining.co.uk',
+    defaultFromName: 'Justin Axon Training',
+    apiKey: process.env.RESEND_API_KEY || '',
+  }),
   secret: process.env.PAYLOAD_SECRET || '',
   sharp,
   typescript: {
