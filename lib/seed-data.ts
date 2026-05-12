@@ -330,8 +330,7 @@ export const seedHomePage = {
   heroTitle: 'Creating emotionally safe, inclusive experiences',
   heroSubtitle:
     'Training and consultancy that helps teams build confidence, understanding and emotionally safe practice — tailored to your people, your setting and your challenges.',
-  heroImageUrl:
-    'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/background-only-MZLwnURIyegWpg5czkYni9Jgohgor4.png',
+  heroImageUrl: '',
   whatIDoTitle: 'What I Do',
   whatIDoParagraph1:
     'Every day, people with SEND and SEMH needs interact with education settings, public services, community organisations, emergency services, customer-facing environments and workplaces.',
@@ -560,10 +559,468 @@ export const seedPricingPage = {
 }
 
 export const seedSiteSettings = {
+  footerDescription:
+    'Creating emotionally safe, inclusive experiences for neurodiverse children, young people, adults and their families.',
   email: 'Justin.Axon@outlook.com',
   phone: '07534 845 636',
   linkedinUrl: 'https://www.linkedin.com/in/justinaxon/',
   availabilityText:
     'I offer weekday sessions and limited weekend availability for community providers. I aim to respond to enquiries within 48 hours.',
   feedbackFormUrl: 'https://forms.office.com/r/8r4t69HCeN',
+}
+
+type SeedButton = {
+  label: string
+  url: string
+  variant?: 'primary' | 'outline' | 'ghost'
+}
+
+type SeedPage = {
+  title: string
+  path: string
+  meta?: {
+    title?: string
+    description?: string
+  }
+  layout: Array<Record<string, unknown>>
+}
+
+type SeedNavigationItem = {
+  label: string
+  pagePath?: string
+  url?: string
+  openInNewTab?: boolean
+  children?: SeedNavigationItem[]
+}
+
+type SeedNavigationColumn = {
+  title: string
+  items: SeedNavigationItem[]
+}
+
+const makeButtons = (buttons: SeedButton[]) => buttons.map((button) => ({ ...button }))
+
+export const seedPages: SeedPage[] = [
+  {
+    title: 'Home',
+    path: '/',
+    meta: {
+      title: 'Justin Axon Training & Consultancy Ltd',
+      description:
+        'Creating emotionally safe, inclusive experiences for neurodiverse children, young people, adults and their families.',
+    },
+    layout: [
+      {
+        blockType: 'hero',
+        heading: seedHomePage.heroTitle,
+        subheading: seedHomePage.heroSubtitle,
+        height: 'hero',
+        headerVariant: 'transparent',
+        buttons: makeButtons([
+          { label: 'Explore Training', url: '/training', variant: 'primary' },
+        ]),
+      },
+      {
+        blockType: 'content',
+        heading: seedHomePage.whatIDoTitle,
+        paragraphs: [
+          { text: seedHomePage.whatIDoParagraph1 },
+          { text: seedHomePage.whatIDoParagraph2 },
+          { text: seedHomePage.whatIDoCardText },
+        ],
+        maxWidth: '5xl',
+        background: 'background',
+      },
+      {
+        blockType: 'cardGrid',
+        heading: seedHomePage.whoIWorkWithTitle,
+        subheading: seedHomePage.whoIWorkWithSubtitle,
+        columns: '3',
+        cards: seedHomePage.sectors.map((sector) => ({
+          title: sector.title,
+          description: sector.description,
+          href: sector.href,
+          linkLabel: 'View sector',
+          icon: sector.icon,
+        })),
+        background: 'muted',
+      },
+      {
+        blockType: 'content',
+        centered: true,
+        paragraphs: [{ text: seedHomePage.whoIWorkWithNote }],
+        maxWidth: '3xl',
+        background: 'muted',
+      },
+      {
+        blockType: 'bulletList',
+        heading: seedHomePage.whyChooseMeTitle,
+        icon: 'CheckCircle',
+        items: seedHomePage.whyChooseItems,
+        background: 'background',
+      },
+      {
+        blockType: 'quote',
+        quote: seedHomePage.whyChooseMeQuote,
+        author: seedHomePage.whyChooseMeQuoteAuthor,
+        background: 'gradient',
+      },
+      {
+        blockType: 'cta',
+        heading: seedHomePage.ctaTitle,
+        subheading: seedHomePage.ctaSubtitle,
+        background: 'brand',
+        buttons: makeButtons([
+          { label: 'Contact Me', url: '/contact', variant: 'primary' },
+          { label: 'View Pricing', url: '/pricing', variant: 'outline' },
+        ]),
+      },
+    ],
+  },
+  {
+    title: 'About Me',
+    path: '/about',
+    meta: {
+      title: 'About Me | Justin Axon Training & Consultancy',
+      description: seedAboutPage.heroSubtitle,
+    },
+    layout: [
+      {
+        blockType: 'hero',
+        heading: seedAboutPage.heroTitle,
+        subheading: seedAboutPage.heroSubtitle,
+        height: 'page',
+        headerVariant: 'transparent',
+      },
+      {
+        blockType: 'content',
+        paragraphs: [seedAboutPage.bio1, seedAboutPage.bio2, seedAboutPage.bio3].map((text) => ({ text })),
+        background: 'background',
+      },
+      {
+        blockType: 'content',
+        heading: seedAboutPage.valuesTitle,
+        paragraphs: [{ text: seedAboutPage.valuesText }],
+        background: 'background',
+      },
+      {
+        blockType: 'cardGrid',
+        heading: seedAboutPage.guidingPrinciplesTitle,
+        subheading: seedAboutPage.guidingPrinciplesNote,
+        columns: '3',
+        cards: seedAboutPage.guidingPrinciples.map((principle) => ({
+          title: principle.title,
+          description: principle.description,
+          icon: principle.icon,
+        })),
+        background: 'muted',
+      },
+      {
+        blockType: 'content',
+        heading: seedAboutPage.howIWorkTitle,
+        paragraphs: [seedAboutPage.howIWork1, seedAboutPage.howIWork2, seedAboutPage.howIWork3].map((text) => ({ text })),
+        background: 'background',
+      },
+      {
+        blockType: 'quote',
+        quote: seedAboutPage.howIWorkQuote,
+        background: 'gradient',
+      },
+      {
+        blockType: 'content',
+        heading: seedAboutPage.fullBioTitle,
+        paragraphs: [seedAboutPage.fullBio1, seedAboutPage.fullBio2, seedAboutPage.fullBio3].map((text) => ({ text })),
+        background: 'muted',
+      },
+    ],
+  },
+  {
+    title: 'Training',
+    path: '/training',
+    meta: {
+      title: 'Training | Justin Axon Training & Consultancy',
+      description:
+        'Choose the area that best reflects your setting to explore tailored training designed for your world, your challenges and your people.',
+    },
+    layout: [
+      {
+        blockType: 'hero',
+        heading: 'Training',
+        subheading:
+          'Teams across education, public services, community settings, emergency services, customer-facing environments and workplaces all interact with neurodivergent people and people with SEND/SEMH needs.',
+        height: 'page',
+        headerVariant: 'transparent',
+      },
+      {
+        blockType: 'trainingAreas',
+        heading: 'Training Areas',
+        showAudience: true,
+        showCategoryDescriptions: true,
+        background: 'background',
+      },
+      {
+        blockType: 'cta',
+        heading: "Let's Talk About Your Team",
+        subheading:
+          "I'm happy to have a short, no-pressure conversation to explore what would help your team most.",
+        background: 'brand',
+        buttons: makeButtons([
+          { label: 'Get in Touch', url: '/contact', variant: 'primary' },
+          { label: 'View Pricing', url: '/pricing', variant: 'outline' },
+        ]),
+      },
+    ],
+  },
+  {
+    title: 'Consultancy',
+    path: '/consultancy',
+    meta: {
+      title: 'Consultancy | Justin Axon Training & Consultancy',
+      description: seedConsultancyPage.heroSubtitle,
+    },
+    layout: [
+      {
+        blockType: 'hero',
+        heading: seedConsultancyPage.heroTitle,
+        subheading: seedConsultancyPage.heroSubtitle,
+        height: 'page',
+        headerVariant: 'transparent',
+      },
+      {
+        blockType: 'content',
+        paragraphs: [{ text: seedConsultancyPage.introText }],
+        maxWidth: '3xl',
+        background: 'background',
+      },
+      {
+        blockType: 'cardGrid',
+        heading: 'Consultancy Services',
+        columns: '2',
+        cards: seedConsultancyPage.services.map((service) => ({
+          anchorId: service.id,
+          title: service.title,
+          description: service.description,
+          bullets: service.includes,
+          outcome: service.outcome,
+          icon:
+            service.id === 'audits'
+              ? 'ClipboardCheck'
+              : service.id === 'coaching'
+                ? 'Users'
+                : service.id === 'policy'
+                  ? 'FileText'
+                  : service.id === 'action-planning'
+                    ? 'Target'
+                    : service.id === 'monitoring'
+                      ? 'BarChart3'
+                      : 'Briefcase',
+        })),
+        background: 'muted',
+      },
+      {
+        blockType: 'steps',
+        heading: 'How Consultancy Works',
+        columns: '4',
+        steps: seedConsultancyPage.howItWorks.map((step, index) => ({
+          title: step.title,
+          description: step.description,
+          icon: ['MessageCircle', 'FileText', 'Calendar', 'Target'][index] || 'MessageCircle',
+        })),
+        background: 'background',
+      },
+      {
+        blockType: 'cta',
+        heading: seedConsultancyPage.ctaTitle,
+        subheading: seedConsultancyPage.ctaSubtitle,
+        background: 'brand',
+        buttons: makeButtons([
+          { label: 'Contact Me', url: '/contact', variant: 'primary' },
+          { label: 'Justin.Axon@outlook.com', url: 'mailto:Justin.Axon@outlook.com', variant: 'outline' },
+        ]),
+      },
+    ],
+  },
+  {
+    title: 'Testimonials',
+    path: '/testimonials',
+    meta: {
+      title: 'Testimonials | Justin Axon Training & Consultancy',
+      description:
+        "Real change is best shown by the people who experience it. Read testimonials from teams and leaders I've worked with.",
+    },
+    layout: [
+      {
+        blockType: 'hero',
+        heading: 'Testimonials',
+        subheading:
+          "Real change is best shown by the people who experience it. Below are short extracts from the teams and leaders I've worked with.",
+        height: 'page',
+        headerVariant: 'transparent',
+      },
+      {
+        blockType: 'testimonialsFeed',
+        heading: 'What Clients Say',
+        limit: 50,
+        showFeedbackCta: true,
+        feedbackTitle: 'Share Your Feedback',
+        feedbackText:
+          "If you'd like to share feedback about your experience working with me, I'd love to hear from you.",
+        feedbackButtonLabel: 'Submit Feedback',
+        showBottomCta: true,
+        bottomCtaHeading: 'Ready to Get Started?',
+        bottomCtaText:
+          'Join the many teams who have transformed their practice with tailored training and consultancy.',
+        bottomCtaButtons: makeButtons([
+          { label: 'Contact Me', url: '/contact', variant: 'primary' },
+          { label: 'Explore Training', url: '/training', variant: 'outline' },
+        ]),
+        background: 'background',
+      },
+    ],
+  },
+  {
+    title: 'Pricing',
+    path: '/pricing',
+    meta: {
+      title: 'Pricing | Justin Axon Training & Consultancy',
+      description: 'Simple, transparent pricing for training, consultancy and audit services.',
+    },
+    layout: [
+      {
+        blockType: 'hero',
+        heading: seedPricingPage.heroTitle,
+        subheading: seedPricingPage.heroSubtitle,
+        height: 'page',
+        headerVariant: 'transparent',
+      },
+      {
+        blockType: 'pricingTable',
+        heading: 'Pricing Overview',
+        categories: seedPricingPage.pricingCategories,
+        additionalCostsHeading: 'Additional Costs',
+        additionalCosts: seedPricingPage.additionalCosts,
+        background: 'background',
+      },
+      {
+        blockType: 'cta',
+        heading: seedPricingPage.ctaTitle,
+        subheading: seedPricingPage.ctaSubtitle,
+        background: 'brand',
+        buttons: makeButtons([
+          { label: 'Contact Me', url: '/contact', variant: 'primary' },
+          { label: 'Justin.Axon@outlook.com', url: 'mailto:Justin.Axon@outlook.com', variant: 'outline' },
+        ]),
+      },
+    ],
+  },
+  {
+    title: 'Contact',
+    path: '/contact',
+    meta: {
+      title: 'Get in Touch | Justin Axon Training & Consultancy',
+      description: "I'm happy to have a short, no-pressure conversation to explore what would help your team most.",
+    },
+    layout: [
+      {
+        blockType: 'hero',
+        heading: 'Get in Touch',
+        subheading:
+          "I'm happy to have a short, no-pressure conversation to explore what would help your team most.",
+        height: 'page',
+        headerVariant: 'transparent',
+      },
+      {
+        blockType: 'contactSection',
+        heading: 'Get in Touch',
+        subheading:
+          "I'm happy to have a short, no-pressure conversation to explore what would help your team most.",
+        showContactInfo: true,
+        showForm: true,
+        background: 'background',
+      },
+    ],
+  },
+]
+
+export const seedNavigation: {
+  headerMenu: SeedNavigationItem[]
+  footerColumns: SeedNavigationColumn[]
+} = {
+  headerMenu: [
+    { label: 'Home', pagePath: '/' },
+    { label: 'About Me', pagePath: '/about' },
+    {
+      label: 'Training',
+      pagePath: '/training',
+      children: [
+        {
+          label: 'Education',
+          url: '/training',
+          children: [
+            { label: 'Early Years', url: '/training/early-years' },
+            { label: 'Primary', url: '/training/primary' },
+            { label: 'Secondary', url: '/training/secondary' },
+            { label: 'Special Schools', url: '/training/special-schools' },
+            { label: 'Post-16', url: '/training/post-16' },
+            { label: 'Alternative Provision', url: '/training/alternative-provision' },
+          ],
+        },
+        {
+          label: 'Public Sector, Health & Social Care',
+          url: '/training',
+          children: [
+            { label: 'Local Authority Services', url: '/training/local-authority' },
+            { label: 'Health & Clinical Services', url: '/training/health-clinical' },
+            { label: 'Social Care, Residential & Fostering', url: '/training/social-care' },
+          ],
+        },
+        {
+          label: 'Activity, Youth & Community',
+          url: '/training',
+          children: [
+            { label: 'Out-of-School Activity Providers', url: '/training/activity-providers' },
+            { label: 'Family & Community Hubs', url: '/training/family-community' },
+          ],
+        },
+        { label: 'Emergency & Frontline Services', url: '/training/emergency-services' },
+        { label: 'Customer Experience & Public-Facing Teams', url: '/training/customer-experience' },
+        { label: 'Parents & Carers', url: '/training/parents-carers' },
+        { label: 'Corporate & Business', url: '/training/corporate-business' },
+        { label: 'Supply, Staffing & Workforce Agencies', url: '/training/workforce-agencies' },
+      ],
+    },
+    {
+      label: 'Consultancy',
+      pagePath: '/consultancy',
+      children: seedConsultancyPage.services.map((service) => ({
+        label: service.title,
+        url: `/consultancy#${service.id}`,
+      })),
+    },
+    { label: 'Testimonials', pagePath: '/testimonials' },
+    { label: 'Pricing', pagePath: '/pricing' },
+    { label: 'Contact', pagePath: '/contact' },
+  ],
+  footerColumns: [
+    {
+      title: 'Quick Links',
+      items: [
+        { label: 'About Me', pagePath: '/about' },
+        { label: 'Training', pagePath: '/training' },
+        { label: 'Consultancy', pagePath: '/consultancy' },
+        { label: 'Testimonials', pagePath: '/testimonials' },
+        { label: 'Pricing', pagePath: '/pricing' },
+      ],
+    },
+    {
+      title: 'Training Areas',
+      items: [
+        { label: 'Early Years', url: '/training/early-years' },
+        { label: 'Primary Schools', url: '/training/primary' },
+        { label: 'Secondary Schools', url: '/training/secondary' },
+        { label: 'Health & Clinical', url: '/training/health-clinical' },
+        { label: 'Corporate & Business', url: '/training/corporate-business' },
+      ],
+    },
+  ],
 }

@@ -9,14 +9,8 @@ interface PageHeaderProps {
 export function PageHeader({ title, subtitle }: PageHeaderProps) {
   return (
     <section className="relative min-h-[50vh] flex flex-col">
-      {/* Background Image */}
-      <Image
-        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/background-only-MZLwnURIyegWpg5czkYni9Jgohgor4.png"
-        alt=""
-        fill
-        className="object-cover"
-        priority
-      />
+      <Image src="/icon.png" alt="" fill className="object-cover opacity-0" priority />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0a2540] via-[#144a73] to-[#0a2540]" />
       
       {/* Header */}
       <Header variant="transparent" />

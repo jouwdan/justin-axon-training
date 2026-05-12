@@ -3,6 +3,7 @@ import { Lexend } from 'next/font/google'
 import '../globals.css'
 import { Footer } from '@/components/footer'
 import { Analytics } from '@vercel/analytics/next'
+import { getSiteData } from '@/lib/site-data'
 
 const lexend = Lexend({
   subsets: ['latin'],
@@ -21,12 +22,14 @@ export const metadata: Metadata = {
   },
 }
 
-export default function FrontendLayout({ children }: { children: React.ReactNode }) {
+export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
+  const siteData = await getSiteData()
+
   return (
     <html lang="en" className={`${lexend.variable} bg-background`}>
       <body className="font-sans antialiased min-h-screen flex flex-col">
         <main className="flex-1">{children}</main>
-        <Footer />
+        <Footer settings={siteData.settings} footerColumns={siteData.footerColumns} />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>

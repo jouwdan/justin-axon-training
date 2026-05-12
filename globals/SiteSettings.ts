@@ -7,6 +7,22 @@ export const SiteSettings: GlobalConfig = {
   },
   fields: [
     {
+      name: 'logo',
+      type: 'upload',
+      relationTo: 'media',
+    },
+    {
+      name: 'defaultHeroImage',
+      type: 'upload',
+      relationTo: 'media',
+    },
+    {
+      name: 'footerDescription',
+      type: 'textarea',
+      defaultValue:
+        'Creating emotionally safe, inclusive experiences for neurodiverse children, young people, adults and their families.',
+    },
+    {
       name: 'email',
       type: 'text',
       defaultValue: 'Justin.Axon@outlook.com',

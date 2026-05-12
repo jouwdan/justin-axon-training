@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Header } from '@/components/header'
 import { getPayload } from 'payload'
 import config from '@payload-config'
+import { getSiteData } from '@/lib/site-data'
 
 export const dynamic = 'force-dynamic'
 
@@ -37,6 +38,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function TrainingAreaPage({ params }: PageProps) {
   const { slug } = await params
   const payload = await getPayload({ config })
+  const siteData = await getSiteData()
   const { docs } = await payload.find({
     collection: 'training-areas',
     where: { slug: { equals: slug } },
@@ -48,15 +50,24 @@ export default async function TrainingAreaPage({ params }: PageProps) {
     notFound()
   }
 
-  const heroImageUrl = 'https://hebbkx1anhila5yf.public.blob.vercel-storage.com/background-only-MZLwnURIyegWpg5czkYni9Jgohgor4.png'
+  const heroImageUrl = siteData.settings.defaultHeroImageUrl?.trim() || ''
   const helpItems = (area.helpItems as Array<{ text: string }> | null) || []
 
   return (
     <div className="flex flex-col">
       {/* Hero Section */}
       <section className="relative min-h-[50vh] flex flex-col">
-        <Image src={heroImageUrl} alt="" fill className="object-cover" priority />
-        <Header variant="transparent" />
+        {heroImageUrl ? (
+          <Image src={heroImageUrl} alt="" fill className="object-cover" unoptimized priority />
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-br from-[#0a2540] via-[#144a73] to-[#0a2540]" />
+        )}
+        <Header
+          variant="transparent"
+          menuItems={siteData.headerMenu}
+          logoUrl={siteData.settings.logoUrl}
+          logoAlt="Justin Axon Training & Consultancy Ltd"
+        />
         <div className="h-20" />
         <div className="relative flex-1 flex items-center">
           <div className="container mx-auto px-4 py-16">

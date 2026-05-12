@@ -9,14 +9,12 @@ import { fileURLToPath } from 'url'
 
 import { Users } from './collections/Users'
 import { Media } from './collections/Media'
+import { Pages } from './collections/Pages'
 import { TrainingAreas } from './collections/TrainingAreas'
 import { Testimonials } from './collections/Testimonials'
 import { ContactSubmissions } from './collections/ContactSubmissions'
 import { SiteSettings } from './globals/SiteSettings'
-import { HomePage } from './globals/HomePage'
-import { AboutPage } from './globals/AboutPage'
-import { ConsultancyPage } from './globals/ConsultancyPage'
-import { PricingPage } from './globals/PricingPage'
+import { Navigation } from './globals/Navigation'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -35,8 +33,8 @@ export default buildConfig({
     },
     push: process.env.NODE_ENV !== 'production',
   }),
-  collections: [Users, Media, TrainingAreas, Testimonials, ContactSubmissions],
-  globals: [SiteSettings, HomePage, AboutPage, ConsultancyPage, PricingPage],
+  collections: [Users, Media, Pages, TrainingAreas, Testimonials, ContactSubmissions],
+  globals: [SiteSettings, Navigation],
   plugins: [
     vercelBlobStorage({
       collections: { media: true },
