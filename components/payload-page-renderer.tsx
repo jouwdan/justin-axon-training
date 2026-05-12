@@ -365,10 +365,52 @@ export async function PayloadPageRenderer({ page }: { page: { layout?: LayoutBlo
           )
         }
 
+        if (block.blockType === 'profileIntro') {
+          const background = typeof block.background === 'string' ? block.background : 'background'
+          const sectionBg = backgroundClassMap[background] ?? backgroundClassMap.background
+          const imageAlt = typeof block.imageAlt === 'string' ? block.imageAlt : 'Profile image'
+          const imageUrl =
+            resolveMediaUrl(block.image) ||
+            (typeof block.imageUrl === 'string' ? block.imageUrl : null) ||
+            ''
+          const paragraphs =
+            Array.isArray(block.paragraphs)
+              ? block.paragraphs
+                  .map((p) => (p as { text?: unknown }).text)
+                  .filter((text): text is string => typeof text === 'string')
+              : []
+
+          return (
+            <section key={index} className={`py-16 ${sectionBg}`}>
+              <div className="container mx-auto px-4">
+                <div className="flex flex-col items-start gap-8 md:flex-row md:gap-12">
+                  {imageUrl && (
+                    <div className="w-full shrink-0 md:w-[30%]">
+                      <div className="relative mx-auto aspect-square w-full max-w-xs overflow-hidden rounded-2xl shadow-lg md:mx-0">
+                        <Image src={imageUrl} alt={imageAlt} fill className="object-cover" unoptimized />
+                      </div>
+                    </div>
+                  )}
+                  <div className={imageUrl ? 'w-full md:w-[70%]' : 'w-full'}>
+                    <div className="prose prose-lg max-w-none">
+                      {paragraphs.map((text) => (
+                        <p key={text.slice(0, 30)} className="mb-6 leading-relaxed text-foreground last:mb-0">
+                          {text}
+                        </p>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          )
+        }
+
         if (block.blockType === 'content') {
           const heading = typeof block.heading === 'string' ? block.heading : ''
           const subheading = typeof block.subheading === 'string' ? block.subheading : ''
           const centered = Boolean(block.centered)
+          const style = block.style === 'card' ? 'card' : 'plain'
           const maxWidthKey = typeof block.maxWidth === 'string' ? block.maxWidth : '5xl'
           const maxWidthClass = contentMaxWidthMap[maxWidthKey] ?? contentMaxWidthMap['5xl']
           const background = typeof block.background === 'string' ? block.background : 'background'
@@ -384,7 +426,11 @@ export async function PayloadPageRenderer({ page }: { page: { layout?: LayoutBlo
           return (
             <section key={index} className={`py-16 ${sectionBg}`}>
               <div className="container mx-auto px-4">
-                <div className={`${maxWidthClass} ${centered ? 'mx-auto text-center' : ''}`}>
+                <div
+                  className={`${maxWidthClass} ${centered ? 'mx-auto text-center' : ''} ${
+                    style === 'card' ? 'rounded-2xl border border-border bg-card p-8 shadow-sm' : ''
+                  }`}
+                >
                   {heading && (
                     <h2 className={`mb-4 text-3xl font-bold md:text-4xl ${background === 'brand' ? 'text-white' : 'text-foreground'}`}>
                       {heading}

@@ -693,7 +693,9 @@ export const seedPages: SeedPage[] = [
         headerVariant: 'transparent',
       },
       {
-        blockType: 'content',
+        blockType: 'profileIntro',
+        imageUrl: seedAboutPage.photoUrl,
+        imageAlt: 'Justin Axon - Trainer and Consultant',
         paragraphs: [seedAboutPage.bio1, seedAboutPage.bio2, seedAboutPage.bio3].map((text) => ({ text })),
         background: 'background',
       },
@@ -701,6 +703,7 @@ export const seedPages: SeedPage[] = [
         blockType: 'content',
         heading: seedAboutPage.valuesTitle,
         paragraphs: [{ text: seedAboutPage.valuesText }],
+        style: 'card',
         background: 'background',
       },
       {

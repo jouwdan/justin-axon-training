@@ -118,6 +118,51 @@ const contentBlock: Block = {
       ],
     },
     {
+      name: 'style',
+      type: 'select',
+      defaultValue: 'plain',
+      options: [
+        { label: 'Plain', value: 'plain' },
+        { label: 'Card (Bordered)', value: 'card' },
+      ],
+    },
+    {
+      name: 'background',
+      type: 'select',
+      defaultValue: 'background',
+      options: sectionBackgroundOptions,
+    },
+  ],
+}
+
+const profileIntroBlock: Block = {
+  slug: 'profileIntro',
+  labels: { singular: 'Profile Intro', plural: 'Profile Intros' },
+  fields: [
+    {
+      name: 'image',
+      type: 'upload',
+      relationTo: 'media',
+    },
+    {
+      name: 'imageUrl',
+      type: 'text',
+      admin: {
+        description: 'Optional fallback URL if no media upload is selected.',
+      },
+    },
+    {
+      name: 'imageAlt',
+      type: 'text',
+      defaultValue: 'Profile image',
+    },
+    {
+      name: 'paragraphs',
+      type: 'array',
+      required: true,
+      fields: [{ name: 'text', type: 'textarea', required: true }],
+    },
+    {
       name: 'background',
       type: 'select',
       defaultValue: 'background',
@@ -488,6 +533,7 @@ export const Pages: CollectionConfig = {
       required: true,
       blocks: [
         heroBlock,
+        profileIntroBlock,
         contentBlock,
         cardGridBlock,
         bulletListBlock,
