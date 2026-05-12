@@ -608,9 +608,10 @@ export async function PayloadPageRenderer({ page }: { page: { layout?: LayoutBlo
           if (!heading) return null
           const subheading = typeof block.subheading === 'string' ? block.subheading : ''
           const background = typeof block.background === 'string' ? block.background : 'brand'
+          const isBrandBackground = background === 'brand'
           const sectionBg = backgroundClassMap[background] ?? backgroundClassMap.brand
-          const headingClass = background === 'brand' ? 'text-white' : 'text-foreground'
-          const subheadingClass = background === 'brand' ? 'text-white/80' : 'text-muted-foreground'
+          const headingClass = isBrandBackground ? 'text-white' : 'text-foreground'
+          const subheadingClass = isBrandBackground ? 'text-white/80' : 'text-muted-foreground'
           const buttons = normalizeButtons(block.buttons)
 
           return (
@@ -618,7 +619,9 @@ export async function PayloadPageRenderer({ page }: { page: { layout?: LayoutBlo
               <div className="container mx-auto px-4 text-center">
                 <h2 className={`mb-4 text-3xl font-bold md:text-4xl ${headingClass}`}>{heading}</h2>
                 {subheading && <p className={`mx-auto mb-8 max-w-3xl text-lg ${subheadingClass}`}>{subheading}</p>}
-                <div className="flex flex-wrap justify-center gap-4">{renderButtons(buttons)}</div>
+                <div className="flex flex-wrap justify-center gap-4">
+                  {renderButtons(buttons, isBrandBackground ? { hero: true } : undefined)}
+                </div>
               </div>
             </section>
           )
