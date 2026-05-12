@@ -215,6 +215,9 @@ const cardGridBlock: Block = {
         { name: 'outcome', type: 'textarea' },
       ],
     },
+    { name: 'bottomNote', type: 'text' },
+    { name: 'ctaLabel', type: 'text' },
+    { name: 'ctaUrl', type: 'text' },
   ],
 }
 
@@ -235,6 +238,19 @@ const bulletListBlock: Block = {
       type: 'array',
       required: true,
       fields: [{ name: 'text', type: 'text', required: true }],
+    },
+    { name: 'quote', type: 'textarea' },
+    { name: 'quoteAuthor', type: 'text' },
+    {
+      name: 'quoteBackground',
+      type: 'select',
+      defaultValue: 'gradient',
+      options: [
+        { label: 'Gradient', value: 'gradient' },
+        { label: 'Brand', value: 'brand' },
+        { label: 'Muted', value: 'muted' },
+        { label: 'Background', value: 'background' },
+      ],
     },
     {
       name: 'background',

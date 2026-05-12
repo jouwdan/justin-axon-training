@@ -643,13 +643,9 @@ export const seedPages: SeedPage[] = [
           linkLabel: 'View sector',
           icon: sector.icon,
         })),
-        background: 'muted',
-      },
-      {
-        blockType: 'content',
-        centered: true,
-        paragraphs: [{ text: seedHomePage.whoIWorkWithNote }],
-        maxWidth: '3xl',
+        bottomNote: seedHomePage.whoIWorkWithNote,
+        ctaLabel: 'View All Training Areas',
+        ctaUrl: '/training',
         background: 'muted',
       },
       {
@@ -657,13 +653,10 @@ export const seedPages: SeedPage[] = [
         heading: seedHomePage.whyChooseMeTitle,
         icon: 'CheckCircle',
         items: seedHomePage.whyChooseItems,
-        background: 'background',
-      },
-      {
-        blockType: 'quote',
         quote: seedHomePage.whyChooseMeQuote,
-        author: seedHomePage.whyChooseMeQuoteAuthor,
-        background: 'gradient',
+        quoteAuthor: seedHomePage.whyChooseMeQuoteAuthor,
+        quoteBackground: 'gradient',
+        background: 'background',
       },
       {
         blockType: 'cta',

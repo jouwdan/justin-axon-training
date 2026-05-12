@@ -20,7 +20,7 @@ export function PageHeader({ title, subtitle }: PageHeaderProps) {
       
       {/* Page Title */}
       <div className="relative flex-1 flex items-center">
-        <div className="container mx-auto px-4 py-16">
+        <div className="container mx-auto px-4 py-10 md:py-12">
           <div className="max-w-3xl text-white">
             <h1 className="text-4xl md:text-5xl font-semibold leading-tight mb-4">
               {title}

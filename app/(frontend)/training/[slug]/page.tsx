@@ -70,7 +70,7 @@ export default async function TrainingAreaPage({ params }: PageProps) {
         />
         <div className="h-20" />
         <div className="relative flex-1 flex items-center">
-          <div className="container mx-auto px-4 py-16">
+          <div className="container mx-auto px-4 py-10 md:py-12">
             <div className="max-w-3xl text-white">
               <Link href="/training" className="inline-flex items-center text-white/80 hover:text-white mb-4 text-sm">
                 &larr; Back to Training

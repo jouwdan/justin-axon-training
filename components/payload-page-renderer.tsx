@@ -176,7 +176,7 @@ const columnsClassMap: Record<string, string> = {
 }
 
 const heroHeightClassMap: Record<string, string> = {
-  hero: 'min-h-[85vh]',
+  hero: 'min-h-[72vh]',
   page: 'min-h-[50vh]',
   compact: 'min-h-[38vh]',
 }
@@ -349,13 +349,13 @@ export async function PayloadPageRenderer({ page }: { page: { layout?: LayoutBlo
               />
               <div className="h-20" />
               <div className="relative flex flex-1 items-center">
-                <div className="container mx-auto px-4 py-16">
+                <div className="container mx-auto px-4 py-10 md:py-12">
                   <div className="max-w-3xl text-white">
                     <h1 className="mb-4 text-4xl font-semibold leading-tight md:text-5xl lg:text-6xl">
                       {heading}
                     </h1>
                     {subheading && (
-                      <p className="mb-8 text-lg leading-relaxed text-white/80 md:text-xl">{subheading}</p>
+                      <p className="mb-6 text-lg leading-relaxed text-white/80 md:text-xl">{subheading}</p>
                     )}
                     {renderButtons(buttons, { hero: true })}
                   </div>
@@ -451,6 +451,9 @@ export async function PayloadPageRenderer({ page }: { page: { layout?: LayoutBlo
         if (block.blockType === 'cardGrid') {
           const heading = typeof block.heading === 'string' ? block.heading : ''
           const subheading = typeof block.subheading === 'string' ? block.subheading : ''
+          const bottomNote = typeof block.bottomNote === 'string' ? block.bottomNote : ''
+          const ctaLabel = typeof block.ctaLabel === 'string' ? block.ctaLabel : ''
+          const ctaUrl = typeof block.ctaUrl === 'string' ? block.ctaUrl : ''
           const columns = typeof block.columns === 'string' ? block.columns : '3'
           const gridColumns = columnsClassMap[columns] ?? columnsClassMap['3']
           const cards = Array.isArray(block.cards) ? block.cards : []
@@ -533,6 +536,20 @@ export async function PayloadPageRenderer({ page }: { page: { layout?: LayoutBlo
                     )
                   })}
                 </div>
+
+                {(bottomNote || (ctaLabel && ctaUrl)) && (
+                  <div className="mt-8 text-center">
+                    {bottomNote && <p className={`mb-4 ${mutedText}`}>{bottomNote}</p>}
+                    {ctaLabel && ctaUrl && (
+                      <Button asChild variant="outline">
+                        <Link href={ctaUrl}>
+                          {ctaLabel}
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
+                )}
               </div>
             </section>
           )
@@ -542,6 +559,10 @@ export async function PayloadPageRenderer({ page }: { page: { layout?: LayoutBlo
           const heading = typeof block.heading === 'string' ? block.heading : ''
           const subheading = typeof block.subheading === 'string' ? block.subheading : ''
           const Icon = getIcon(block.icon)
+          const quote = typeof block.quote === 'string' ? block.quote : ''
+          const quoteAuthor = typeof block.quoteAuthor === 'string' ? block.quoteAuthor : ''
+          const quoteBackground =
+            typeof block.quoteBackground === 'string' ? block.quoteBackground : 'gradient'
           const items =
             Array.isArray(block.items)
               ? block.items
@@ -553,22 +574,46 @@ export async function PayloadPageRenderer({ page }: { page: { layout?: LayoutBlo
           const headingClass = background === 'brand' ? 'text-white' : 'text-foreground'
           const itemClass = background === 'brand' ? 'text-white/90' : 'text-foreground'
 
+          const quoteClassByBackground: Record<string, string> = {
+            gradient: 'bg-gradient-to-br from-primary to-secondary text-white',
+            brand: 'bg-[#0a2540] text-white',
+            muted: 'bg-muted/30 text-foreground',
+            background: 'bg-background text-foreground border border-border',
+          }
+
           return (
             <section key={index} className={`py-16 ${sectionBg}`}>
               <div className="container mx-auto px-4">
-                <div className="mx-auto max-w-3xl">
-                  {heading && <h2 className={`mb-4 text-3xl font-bold md:text-4xl ${headingClass}`}>{heading}</h2>}
-                  {subheading && (
-                    <p className={`mb-8 ${background === 'brand' ? 'text-white/80' : 'text-muted-foreground'}`}>{subheading}</p>
+                <div className={quote ? 'grid gap-12 lg:grid-cols-2 items-center' : 'mx-auto max-w-3xl'}>
+                  <div>
+                    {heading && <h2 className={`mb-4 text-3xl font-bold md:text-4xl ${headingClass}`}>{heading}</h2>}
+                    {subheading && (
+                      <p className={`mb-8 ${background === 'brand' ? 'text-white/80' : 'text-muted-foreground'}`}>{subheading}</p>
+                    )}
+                    <ul className="space-y-4">
+                      {items.map((item) => (
+                        <li key={item} className={`flex items-start gap-3 ${itemClass}`}>
+                          <Icon className="mt-0.5 h-6 w-6 shrink-0 text-primary" />
+                          <span>{item}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {quote && (
+                    <div
+                      className={`rounded-2xl p-8 md:p-12 ${quoteClassByBackground[quoteBackground] ?? quoteClassByBackground.gradient}`}
+                    >
+                      <blockquote className="text-xl md:text-2xl italic leading-relaxed">
+                        &ldquo;{quote}&rdquo;
+                      </blockquote>
+                      {quoteAuthor && (
+                        <p className={`mt-6 ${quoteBackground === 'muted' || quoteBackground === 'background' ? 'text-muted-foreground' : 'text-white/80'}`}>
+                          {quoteAuthor}
+                        </p>
+                      )}
+                    </div>
                   )}
-                  <ul className="space-y-4">
-                    {items.map((item) => (
-                      <li key={item} className={`flex items-start gap-3 ${itemClass}`}>
-                        <Icon className="mt-0.5 h-6 w-6 shrink-0 text-primary" />
-                        <span>{item}</span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </div>
             </section>
