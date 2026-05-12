@@ -15,11 +15,9 @@ export const metadata: Metadata = {
     'Creating emotionally safe, inclusive experiences for neurodiverse children, young people, adults and their families. Training and consultancy that helps teams build confidence, understanding and emotionally safe practice.',
   icons: {
     icon: [
-      { url: '/icon-light-32x32.png', media: '(prefers-color-scheme: light)' },
-      { url: '/icon-dark-32x32.png', media: '(prefers-color-scheme: dark)' },
-      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/icon.png', type: 'image/png' },
     ],
-    apple: '/apple-icon.png',
+    apple: '/icon.png',
   },
 }
 
