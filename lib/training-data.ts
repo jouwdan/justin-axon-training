@@ -1,0 +1,238 @@
+export interface TrainingArea {
+  slug: string
+  title: string
+  description: string
+  audience: string
+  helpItems: string[]
+}
+
+export const trainingAreas: TrainingArea[] = [
+  {
+    slug: "early-years",
+    title: "Early Years",
+    description: "Early Years teams — including nurseries, pre-schools, childminders, Early Years units and children's centres — support children at the very beginning of their learning journey. This training helps you create emotionally safe, inclusive environments where young children can communicate, explore and regulate through play.",
+    audience: "Nurseries, pre-schools, childminders, Early Years units and children's centres",
+    helpItems: [
+      "Understand early communication and behaviour",
+      "Support sensory needs and play-based regulation",
+      "Build emotionally safe routines",
+      "Support transitions and separation",
+      "Work confidently with parents and carers",
+      "Create inclusive environments for mixed-ability groups",
+    ],
+  },
+  {
+    slug: "primary",
+    title: "Primary Schools",
+    description: "Primary school teams — from class teachers and SENDCos to teaching assistants, pastoral staff and lunchtime supervisors — work with children who are developing their sense of self, relationships and emotional regulation. This training helps you build classrooms where children feel understood, safe and ready to learn.",
+    audience: "Class teachers, SENDCos, teaching assistants, pastoral staff and lunchtime supervisors",
+    helpItems: [
+      "Understand behaviour as communication",
+      "Create emotionally safe teaching environments",
+      "Support regulation and reduce escalation",
+      "Strengthen relationships and connection",
+      "Develop sensory-aware classrooms",
+      "Support transitions and routines",
+    ],
+  },
+  {
+    slug: "secondary",
+    title: "Secondary Schools",
+    description: "Secondary staff — including teachers, pastoral teams, SEND departments, behaviour teams and safeguarding leads — support adolescents navigating identity, independence and complex social pressures. This training helps you build trust, reduce conflict and support emotional safety in busy, demanding environments.",
+    audience: "Teachers, pastoral teams, SEND departments, behaviour teams and safeguarding leads",
+    helpItems: [
+      "Understand adolescent development and SEMH",
+      "Use trauma-informed, relational approaches",
+      "Reduce escalation and conflict",
+      "Support communication and self-advocacy",
+      "Respond to sensory needs in busy spaces",
+      "Support attendance, anxiety and transitions",
+    ],
+  },
+  {
+    slug: "special-schools",
+    title: "Special Schools",
+    description: "Special school teams — from specialist teachers and support staff to therapists and leaders — work with learners who have diverse communication, sensory and developmental profiles. This training is tailored to your setting and focuses on relational, personalised approaches that meet complex needs.",
+    audience: "Specialist teachers, support staff, therapists and leaders",
+    helpItems: [
+      "Support complex communication needs",
+      "Understand sensory processing and regulation",
+      "Use personalised, strengths-based approaches",
+      "Embed trauma-informed practice",
+      "Work effectively in multi-agency teams",
+      "Support families and transitions",
+    ],
+  },
+  {
+    slug: "post-16",
+    title: "Post-16",
+    description: "Post-16 teams — including colleges, sixth forms, training providers, supported internships and employability staff — support young adults preparing for independence and adulthood. This training helps you build emotionally safe, inclusive environments where learners can grow in confidence and self-advocacy.",
+    audience: "Colleges, sixth forms, training providers, supported internships and employability staff",
+    helpItems: [
+      "Support preparation for adulthood",
+      "Build independence and self-advocacy",
+      "Understand emotional regulation and anxiety",
+      "Use trauma-informed approaches",
+      "Deliver inclusive teaching and assessment",
+      "Support transitions into work, college or community life",
+    ],
+  },
+  {
+    slug: "alternative-provision",
+    title: "Alternative Provision",
+    description: "Alternative Provision teams — including PRUs, specialist behaviour provisions, outreach teams and alternative curriculum providers — support learners who need relational, flexible, trauma-informed approaches. This training helps you build trust, reduce escalation and create emotionally safe learning environments.",
+    audience: "PRUs, specialist behaviour provisions, outreach teams and alternative curriculum providers",
+    helpItems: [
+      "Use trauma-informed, relational practice",
+      "Understand behaviour in context",
+      "Apply de-escalation and co-regulation",
+      "Build trust and engagement",
+      "Support identity and communication",
+      "Create emotionally safe learning environments",
+    ],
+  },
+  {
+    slug: "local-authority",
+    title: "Local Authority Services",
+    description: "Local Authority teams — including SEND & Inclusion, Early Help, Family Support, Youth Justice, Housing, Community Safety, Libraries, Leisure and Transport — support children, young people, adults and families across diverse community settings. This training helps you strengthen communication, emotional safety and inclusive practice across your service.",
+    audience: "SEND & Inclusion, Early Help, Family Support, Youth Justice, Housing, Community Safety, Libraries, Leisure and Transport",
+    helpItems: [
+      "Understand behaviour and communication",
+      "Use trauma-informed, relational approaches",
+      "Support neurodivergent people in community settings",
+      "Improve accessibility and reduce escalation",
+      "Strengthen multi-agency working",
+      "Work confidently with families under pressure",
+    ],
+  },
+  {
+    slug: "health-clinical",
+    title: "Health & Clinical Services",
+    description: "Health and clinical teams — including Health Visitors, School Nurses, Paediatrics, SALT/OT/Physio, CAMHS/HYM, Neurodevelopmental Pathways and Community Nursing — support children, young people and families in clinical and community environments. This training helps you deliver emotionally safe, accessible and sensory-aware care.",
+    audience: "Health Visitors, School Nurses, Paediatrics, SALT/OT/Physio, CAMHS/HYM, Neurodevelopmental Pathways and Community Nursing",
+    helpItems: [
+      "Communicate clearly and accessibly",
+      "Create emotionally safe appointments",
+      "Understand sensory needs in clinical settings",
+      "Support families experiencing stress",
+      "Reduce escalation and anxiety",
+      "Strengthen multi-agency collaboration",
+    ],
+  },
+  {
+    slug: "social-care",
+    title: "Social Care, Residential & Fostering",
+    description: "Residential teams, fostering services and social care practitioners support children and young people who may have experienced trauma, disrupted relationships or complex needs. This training helps you build safe, relational environments where trust and stability can grow.",
+    audience: "Residential teams, fostering services and social care practitioners",
+    helpItems: [
+      "Use trauma-informed, relational practice",
+      "Support emotional regulation and co-regulation",
+      "Understand behaviour as communication",
+      "Strengthen placement stability",
+      "Work effectively with families and professionals",
+      "Support transitions and life changes",
+    ],
+  },
+  {
+    slug: "activity-providers",
+    title: "Out-of-School Activity Providers",
+    description: "Activity providers — including after-school clubs, holiday clubs, youth groups, sports clubs, arts groups, uniformed organisations and outdoor centres — create vital spaces for play, connection and belonging. This training helps you support mixed-ability groups with confidence and warmth.",
+    audience: "After-school clubs, holiday clubs, youth groups, sports clubs, arts groups, uniformed organisations and outdoor centres",
+    helpItems: [
+      "Understand communication and behaviour in informal settings",
+      "Create sensory-aware, inclusive activity spaces",
+      "Support regulation and reduce overwhelm",
+      "Build trust and connection",
+      "Support volunteers and part-time staff",
+      "Work effectively with families",
+    ],
+  },
+  {
+    slug: "family-community",
+    title: "Family & Community Hubs",
+    description: "Family hubs, community centres and VCFSE organisations support families through early help, wellbeing, SEND support and community connection. This training helps you build emotionally safe, accessible environments where families feel understood and supported.",
+    audience: "Family hubs, community centres and VCFSE organisations",
+    helpItems: [
+      "Support families under pressure",
+      "Understand early communication and behaviour",
+      "Use relational, trauma-informed approaches",
+      "Strengthen community-based inclusion",
+      "Build confidence in supporting diverse needs",
+      "Work collaboratively with partners and services",
+    ],
+  },
+  {
+    slug: "emergency-services",
+    title: "Emergency & Frontline Services",
+    description: "Emergency and frontline teams — including police, fire, ambulance, control rooms and community safety staff — often meet people at their most overwhelmed or distressed. This training helps you respond safely, calmly and confidently using trauma-informed, neurodivergent-affirming approaches.",
+    audience: "Police, fire, ambulance, control rooms and community safety staff",
+    helpItems: [
+      "Communicate clearly under pressure",
+      "Reduce escalation and increase emotional safety",
+      "Understand behaviour in crisis situations",
+      "Use trauma-informed, relational responses",
+      "Recognise sensory needs in public spaces",
+      "Support vulnerable individuals with confidence",
+    ],
+  },
+  {
+    slug: "customer-experience",
+    title: "Customer Experience & Public-Facing Teams",
+    description: "Customer-facing and public-facing teams — including retail, hospitality, transport, postal services, leisure centres, libraries, museums, reception teams, call centres, security and visitor services — interact with people from all backgrounds, including those with SEND and SEMH needs. This training helps you create calm, accessible, inclusive experiences for every customer.",
+    audience: "Retail, hospitality, transport, postal services, leisure centres, libraries, museums, reception teams, call centres, security and visitor services",
+    helpItems: [
+      "Communicate clearly and compassionately",
+      "Reduce conflict and de-escalate challenging situations",
+      "Support anxious or overwhelmed customers",
+      "Create sensory-aware, accessible environments",
+      "Understand behaviour in busy public spaces",
+      "Build confidence across diverse customer-facing roles",
+    ],
+  },
+  {
+    slug: "parents-carers",
+    title: "Parents & Carers",
+    description: "Parents and carers play a central role in supporting neurodivergent children and young people. These workshops offer practical, strengths-based strategies that help families understand behaviour, build connection and support emotional regulation at home and in the community.",
+    audience: "Parents and carers of neurodivergent children and young people",
+    helpItems: [
+      "Understand behaviour and communication",
+      "Support emotional regulation",
+      "Build connection and reduce conflict",
+      "Navigate sensory needs",
+      "Support transitions and routines",
+      "Work confidently with schools and professionals",
+    ],
+  },
+  {
+    slug: "corporate-business",
+    title: "Corporate & Business",
+    description: "Corporate and business teams — including HR, leadership, managers and office-based staff — are increasingly focused on building inclusive, neurodivergent-affirming workplaces. This training helps you strengthen culture, communication and accessibility across your organisation.",
+    audience: "HR, leadership, managers and office-based staff",
+    helpItems: [
+      "Build inclusive, psychologically safe workplaces",
+      "Support neurodivergent colleagues confidently",
+      "Improve communication and team culture",
+      "Understand sensory and environmental needs",
+      "Develop inclusive recruitment and onboarding",
+      "Strengthen leadership approaches to wellbeing",
+    ],
+  },
+  {
+    slug: "workforce-agencies",
+    title: "Supply, Staffing & Workforce Agencies",
+    description: "Supply and staffing agencies — including education supply, activity provider staffing, residential care staffing, bank staff providers and temp/agency teams — place workers into diverse environments where SEND and SEMH needs are common. This training helps your workforce feel prepared, confident and safe.",
+    audience: "Education supply, activity provider staffing, residential care staffing, bank staff providers and temp/agency teams",
+    helpItems: [
+      "Build essential SEND/SEMH awareness",
+      "Understand behaviour as communication",
+      "Support regulation and reduce escalation",
+      "Work safely in unfamiliar environments",
+      "Maintain professional boundaries",
+      "Support diverse needs with confidence",
+    ],
+  },
+]
+
+export function getTrainingArea(slug: string): TrainingArea | undefined {
+  return trainingAreas.find((area) => area.slug === slug)
+}
