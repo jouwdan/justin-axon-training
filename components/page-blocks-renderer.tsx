@@ -319,14 +319,17 @@ export function PageBlocksRenderer({
           return (
             <section key={index} className={`relative flex flex-col ${heroHeightClassMap[height] ?? heroHeightClassMap.page}`}>
               {backgroundImageUrl ? (
-                <Image
-                  src={backgroundImageUrl}
-                  alt=""
-                  fill
-                  className="object-cover"
-                  unoptimized
-                  priority={index === 0}
-                />
+                <>
+                  <Image
+                    src={backgroundImageUrl}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    unoptimized
+                    priority={index === 0}
+                  />
+                  <div className="absolute inset-0 bg-[#0a2540]/50" />
+                </>
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-[#0a2540] via-[#144a73] to-[#0a2540]" />
               )}
@@ -363,11 +366,13 @@ export function PageBlocksRenderer({
             (typeof block.imageUrl === 'string' ? block.imageUrl : null) ||
             ''
           const richBody = block.body
+          const maxWidthKey = typeof block.maxWidth === 'string' ? block.maxWidth : '5xl'
+          const maxWidthClass = contentMaxWidthMap[maxWidthKey] ?? contentMaxWidthMap['5xl']
 
           return (
             <section key={index} className={`py-16 ${sectionBg}`}>
               <div className="container mx-auto px-4">
-                <div className="flex flex-col items-start gap-8 md:flex-row md:gap-12">
+                <div className={`${maxWidthClass} ${maxWidthClass ? 'mx-auto' : ''} flex flex-col items-start gap-8 md:flex-row md:gap-12`}>
                   {imageUrl && (
                     <div className="w-full shrink-0 md:w-[30%]">
                       <div className="relative mx-auto aspect-square w-full max-w-xs overflow-hidden rounded-2xl shadow-lg md:mx-0">
@@ -403,7 +408,7 @@ export function PageBlocksRenderer({
             <section key={index} className={`py-16 ${sectionBg}`}>
               <div className="container mx-auto px-4">
                 <div
-                  className={`${maxWidthClass} ${centered ? 'mx-auto text-center' : ''} ${
+                  className={`${maxWidthClass} ${maxWidthClass ? 'mx-auto' : ''} ${centered ? 'text-center' : ''} ${
                     style === 'card' ? 'rounded-2xl border border-border bg-card p-8 shadow-sm' : ''
                   }`}
                 >
@@ -468,25 +473,27 @@ export function PageBlocksRenderer({
                       <div
                         key={`${title}-${cardIndex}`}
                         id={typeof item.anchorId === 'string' ? item.anchorId : undefined}
-                        className="scroll-mt-24 flex flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:shadow-md"
+                        className="scroll-mt-24 flex flex-col rounded-2xl border border-border bg-card p-6 shadow-sm transition-shadow hover:shadow-md"
                       >
-                        <div className="mb-4 flex items-start gap-3">
-                          <div className="rounded-lg bg-primary/10 p-3 shrink-0">
+                        <div className="mb-4">
+                          <div className="mb-3 w-fit rounded-xl bg-primary/10 p-3">
                             <Icon className="h-6 w-6 text-primary" />
                           </div>
                           <h3 className="text-xl font-semibold text-foreground">{title}</h3>
                         </div>
                         <RichText
                           data={richBody as Parameters<typeof RichText>[0]['data']}
-                          className="prose prose-sm max-w-none flex-1 text-muted-foreground"
+                          className="prose prose-sm max-w-none flex-1"
                         />
                         {item.href && (
-                          <Button asChild variant="link" className="mt-auto h-auto p-0 text-primary">
-                            <Link href={item.href}>
-                              {item.linkLabel || 'Learn more'}
-                              <ArrowRight className="ml-2 h-4 w-4" />
-                            </Link>
-                          </Button>
+                          <div className="mt-auto pt-4">
+                            <Button asChild variant="link" className="h-auto p-0 text-primary">
+                              <Link href={item.href}>
+                                {item.linkLabel || 'Learn more'}
+                                <ArrowRight className="ml-2 h-4 w-4" />
+                              </Link>
+                            </Button>
+                          </div>
                         )}
                       </div>
                     )
@@ -708,14 +715,17 @@ export function PageBlocksRenderer({
                           <Link
                             key={area.id}
                             href={`/training/${area.slug}`}
-                            className="group rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-lg"
+                            className="group flex items-start justify-between gap-3 rounded-xl border border-border bg-card p-6 transition-all duration-300 hover:border-primary/50 hover:shadow-lg"
                           >
-                            <h4 className="mb-2 font-semibold text-foreground transition-colors group-hover:text-primary">
-                              {area.title}
-                            </h4>
-                            {showAudience && area.audience && (
-                              <p className="text-sm text-muted-foreground">{area.audience}</p>
-                            )}
+                            <div>
+                              <h4 className="mb-2 font-semibold text-foreground transition-colors group-hover:text-primary">
+                                {area.title}
+                              </h4>
+                              {showAudience && area.audience && (
+                                <p className="text-sm text-muted-foreground">{area.audience}</p>
+                              )}
+                            </div>
+                            <ArrowRight className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground/50 transition-all duration-300 group-hover:translate-x-1 group-hover:text-primary" />
                           </Link>
                         ))}
                       </div>
@@ -779,7 +789,7 @@ export function PageBlocksRenderer({
                     <div key={testimonial.id} className="relative rounded-2xl border border-border bg-card p-8 md:p-10">
                       <Quote className="absolute right-6 top-6 h-12 w-12 text-primary/10" />
                       <blockquote className="relative">
-                        <p className="whitespace-pre-line leading-relaxed text-foreground">
+                        <p className="whitespace-pre-line text-lg italic leading-relaxed text-foreground/90">
                           &ldquo;{testimonial.quote}&rdquo;
                         </p>
                         <footer className="mt-6 border-t border-border pt-6">
@@ -1018,10 +1028,14 @@ export function PageBlocksRenderer({
 
                     return (
                       <div key={`${item.title || 'step'}-${stepIndex}`} className="text-center">
-                        <div className="mx-auto mb-4 w-fit rounded-full bg-primary/10 p-4">
-                          <Icon className="h-8 w-8 text-primary" />
+                        <div className="relative mx-auto mb-4 w-fit">
+                          <div className="rounded-full bg-primary/10 p-4">
+                            <Icon className="h-8 w-8 text-primary" />
+                          </div>
+                          <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-[10px] font-bold text-primary-foreground">
+                            {stepIndex + 1}
+                          </span>
                         </div>
-                        <div className="mb-1 text-sm text-muted-foreground">Step {stepIndex + 1}</div>
                         <h3 className="mb-1 font-semibold text-foreground">{item.title}</h3>
                         {item.description && <p className="text-sm text-muted-foreground">{item.description}</p>}
                       </div>

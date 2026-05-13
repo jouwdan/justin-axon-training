@@ -289,6 +289,19 @@ const profileIntroBlock: Block = {
       },
     },
     {
+      name: 'maxWidth',
+      type: 'select',
+      defaultValue: '5xl',
+      options: [
+        { label: 'Narrow (3XL)', value: '3xl' },
+        { label: 'Standard (5XL) — default', value: '5xl' },
+        { label: 'Full width', value: 'none' },
+      ],
+      admin: {
+        description: 'Maximum width of the profile intro content. Standard (5XL) matches most other sections.',
+      },
+    },
+    {
       name: 'background',
       type: 'select',
       defaultValue: 'background',

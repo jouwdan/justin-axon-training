@@ -33,14 +33,27 @@ export function Header({
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [openDropdown, setOpenDropdown] = React.useState<string | null>(null)
   const [openSubmenu, setOpenSubmenu] = React.useState<string | null>(null)
+  const [scrolled, setScrolled] = React.useState(false)
   const items = menuItems?.length ? menuItems : FALLBACK_MENU
   const isTransparent = variant === 'transparent'
+
+  React.useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 80)
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
+  const useDarkStyle = isTransparent || scrolled
 
   return (
     <header
       className={cn(
-        'absolute left-0 right-0 top-0 z-50 w-full',
-        isTransparent ? 'bg-transparent' : 'border-b border-border bg-background',
+        'left-0 right-0 top-0 z-50 w-full transition-all duration-300',
+        scrolled
+          ? 'fixed bg-[#0a2540]/85 backdrop-blur-md shadow-lg'
+          : isTransparent
+            ? 'absolute bg-transparent'
+            : 'fixed border-b border-border bg-background',
       )}
     >
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
@@ -57,7 +70,9 @@ export function Header({
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex">
-          {items.map((item) => (
+          {items.map((item, index) => {
+            const isCtaItem = index === items.length - 1 && !item.children?.length
+            return (
             <div
               key={item.label}
               className="relative"
@@ -72,9 +87,15 @@ export function Header({
                 target={item.openInNewTab ? '_blank' : undefined}
                 rel={item.openInNewTab ? 'noopener noreferrer' : undefined}
                 className={cn(
-                  'flex items-center gap-1 px-4 py-2 text-sm font-medium transition-colors',
-                  isTransparent ? 'text-white hover:text-white/80' : 'text-foreground/80 hover:text-primary',
-                  openDropdown === item.label && (isTransparent ? 'text-white/80' : 'text-primary'),
+                  'flex items-center gap-1 rounded-lg text-sm font-medium transition-colors',
+                  isCtaItem
+                    ? cn('px-5 py-2.5', useDarkStyle
+                        ? 'bg-white text-[#0a2540] hover:bg-white/90'
+                        : 'bg-primary text-primary-foreground hover:bg-primary/90')
+                    : cn('px-4 py-2', useDarkStyle
+                        ? 'text-white hover:text-white/80'
+                        : 'text-foreground/80 hover:text-primary'),
+                  !isCtaItem && openDropdown === item.label && (useDarkStyle ? 'text-white/80' : 'text-primary'),
                 )}
               >
                 {item.label}
@@ -124,11 +145,11 @@ export function Header({
                 </div>
               )}
             </div>
-          ))}
+          )})}
         </nav>
 
         <button
-          className={cn('p-2 lg:hidden', isTransparent ? 'text-white' : 'text-foreground')}
+          className={cn('p-2 lg:hidden', useDarkStyle ? 'text-white' : 'text-foreground')}
           onClick={() => setMobileMenuOpen((open) => !open)}
           aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
         >

@@ -637,7 +637,8 @@ export const seedPages: SeedPage[] = [
         blockType: 'content',
         heading: seedHomePage.whatIDoTitle,
         body: paragraphsToBody([seedHomePage.whatIDoParagraph1, seedHomePage.whatIDoParagraph2, seedHomePage.whatIDoCardText]),
-        maxWidth: '5xl',
+        centered: true,
+        maxWidth: '3xl',
         background: 'background',
       },
       {
@@ -699,12 +700,14 @@ export const seedPages: SeedPage[] = [
         imageUrl: seedAboutPage.photoUrl,
         imageAlt: 'Justin Axon - Trainer and Consultant',
         body: paragraphsToBody([seedAboutPage.bio1, seedAboutPage.bio2, seedAboutPage.bio3]),
+        maxWidth: '5xl',
         background: 'background',
       },
       {
         blockType: 'content',
         heading: seedAboutPage.valuesTitle,
         body: paragraphsToBody([seedAboutPage.valuesText]),
+        centered: true,
         style: 'card',
         background: 'background',
       },
@@ -794,6 +797,7 @@ export const seedPages: SeedPage[] = [
       {
         blockType: 'content',
         body: paragraphsToBody([seedConsultancyPage.introText]),
+        centered: true,
         maxWidth: '3xl',
         background: 'background',
       },

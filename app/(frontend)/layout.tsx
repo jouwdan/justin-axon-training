@@ -26,7 +26,7 @@ export default async function FrontendLayout({ children }: { children: React.Rea
   const siteData = await getSiteData()
 
   return (
-    <html lang="en" className={`${lexend.variable} bg-background`}>
+    <html lang="en" className={`${lexend.variable} bg-background scroll-smooth`}>
       <body className="font-sans antialiased min-h-screen flex flex-col">
         <main className="flex-1">{children}</main>
         <Footer settings={siteData.settings} footerColumns={siteData.footerColumns} />
