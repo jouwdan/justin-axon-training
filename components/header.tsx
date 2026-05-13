@@ -104,13 +104,17 @@ export function Header({
 
               {item.children?.length && openDropdown === item.label && (
                 <div className="absolute left-0 top-full pt-2">
-                  <div className="min-w-[280px] rounded-lg border border-border bg-card p-2 shadow-lg">
+                  <div
+                    className="min-w-[280px] rounded-lg border border-border bg-card p-2 shadow-lg"
+                    onMouseLeave={() => setOpenSubmenu(null)}
+                  >
                     {item.children.map((child) => (
                       <div
                         key={child.label}
                         className="relative"
-                        onMouseEnter={() => child.children?.length && setOpenSubmenu(child.label)}
-                        onMouseLeave={() => setOpenSubmenu(null)}
+                        onMouseEnter={() =>
+                          child.children?.length ? setOpenSubmenu(child.label) : setOpenSubmenu(null)
+                        }
                       >
                         <Link
                           href={child.href}
@@ -123,7 +127,7 @@ export function Header({
                         </Link>
 
                         {child.children?.length && openSubmenu === child.label && (
-                          <div className="absolute left-full top-0 ml-2">
+                          <div className="absolute left-full top-0 pl-2">
                             <div className="min-w-[220px] rounded-lg border border-border bg-card p-2 shadow-lg">
                               {child.children.map((subItem) => (
                                 <Link
