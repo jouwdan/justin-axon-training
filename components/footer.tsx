@@ -85,6 +85,17 @@ export function Footer({ settings, footerColumns }: FooterProps) {
           <p className="text-sm text-white/50">
             &copy; {new Date().getFullYear()} Justin Axon Training & Consultancy Ltd. All rights reserved.
           </p>
+          <p className="mt-2 text-sm text-white/30">
+            Built with ❤️ by{' '}
+            <a
+              href="https://jouwdan.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-white/60"
+            >
+              Jordan Harrison
+            </a>
+          </p>
         </div>
       </div>
     </footer>
