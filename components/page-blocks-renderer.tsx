@@ -25,6 +25,7 @@ import {
   Phone,
   Quote,
   Shield,
+  Star,
   Target,
   Users,
   Video,
@@ -62,6 +63,7 @@ type TestimonialDoc = {
   quote: string
   author: string
   role: string
+  featured?: boolean
 }
 
 type SiteData = {
@@ -784,18 +786,31 @@ export function PageBlocksRenderer({
                   </div>
                 )}
 
-                <div className="mx-auto max-w-4xl space-y-8">
+                <div className="columns-1 gap-6 md:columns-2 xl:columns-3">
                   {visibleTestimonials.map((testimonial) => (
-                    <div key={testimonial.id} className="relative rounded-2xl border border-border bg-card p-8 md:p-10">
-                      <Quote className="absolute right-6 top-6 h-12 w-12 text-primary/10" />
+                    <div
+                      key={testimonial.id}
+                      className={`relative mb-6 break-inside-avoid rounded-2xl border p-7 ${
+                        testimonial.featured
+                          ? 'border-primary/30 bg-primary/5 shadow-sm'
+                          : 'border-border bg-card'
+                      }`}
+                    >
+                      {testimonial.featured && (
+                        <div className="mb-4 inline-flex items-center gap-1.5 rounded-full bg-primary/10 px-2.5 py-1 text-xs font-semibold text-primary">
+                          <Star className="h-3 w-3 fill-current" />
+                          Featured
+                        </div>
+                      )}
+                      <Quote className={`absolute right-5 top-5 h-10 w-10 ${testimonial.featured ? 'text-primary/15' : 'text-primary/10'}`} />
                       <blockquote className="relative">
-                        <p className="whitespace-pre-line text-lg italic leading-relaxed text-foreground/90">
+                        <p className="whitespace-pre-line text-base italic leading-relaxed text-foreground/90">
                           &ldquo;{testimonial.quote}&rdquo;
                         </p>
-                        <footer className="mt-6 border-t border-border pt-6">
+                        <footer className="mt-5 border-t border-border pt-5">
                           <cite className="not-italic">
                             <span className="font-semibold text-foreground">{testimonial.author}</span>
-                            <span className="text-muted-foreground"> — {testimonial.role}</span>
+                            <span className="block text-sm text-muted-foreground">{testimonial.role}</span>
                           </cite>
                         </footer>
                       </blockquote>

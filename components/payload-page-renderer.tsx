@@ -16,7 +16,7 @@ export async function PayloadPageRenderer({ page }: { page: { layout?: LayoutBlo
   const needsTestimonials = layout.some((block) => block.blockType === 'testimonialsFeed')
 
   let trainingAreas: Array<{ id: string; slug: string; title: string; category: string; audience?: string }> = []
-  let testimonials: Array<{ id: string; quote: string; author: string; role: string }> = []
+  let testimonials: Array<{ id: string; quote: string; author: string; role: string; featured?: boolean }> = []
 
   if (needsTrainingAreas || needsTestimonials) {
     const payload = await getPayload({ config })
