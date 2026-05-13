@@ -32,7 +32,7 @@ import {
 } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { ContactForm } from '@/components/contact-form'
+import { ContactForm, type FormDefinition } from '@/components/contact-form'
 import { Header } from '@/components/header'
 import { useLivePreview } from '@payloadcms/live-preview-react'
 import { RichText } from '@payloadcms/richtext-lexical/react'
@@ -1004,11 +1004,20 @@ export function PageBlocksRenderer({
                     </div>
                   )}
 
-                  {showForm && (
-                    <div className={showContactInfo ? 'lg:col-span-2' : 'mx-auto max-w-4xl'}>
-                      <ContactForm />
-                    </div>
-                  )}
+                  {showForm && (() => {
+                    const formDoc = block.form as FormDefinition | null | undefined
+                    return formDoc?.id ? (
+                      <div className={showContactInfo ? 'lg:col-span-2' : 'mx-auto max-w-4xl'}>
+                        <ContactForm form={formDoc} />
+                      </div>
+                    ) : (
+                      <div className={showContactInfo ? 'lg:col-span-2' : 'mx-auto max-w-4xl'}>
+                        <p className="text-muted-foreground text-sm">
+                          No form linked. Select a form in the admin panel for this Contact Section block.
+                        </p>
+                      </div>
+                    )
+                  })()}
                 </div>
               </div>
             </section>

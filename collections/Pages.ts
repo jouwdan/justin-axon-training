@@ -996,6 +996,15 @@ const contactSectionBlock: Block = {
       },
     },
     {
+      name: 'form',
+      type: 'relationship',
+      relationTo: 'forms',
+      admin: {
+        description: 'Select the form to display. The "Contact Enquiry Form" is created by the seed endpoint.',
+        condition: (_, siblingData) => siblingData?.showForm !== false,
+      },
+    },
+    {
       name: 'background',
       type: 'select',
       defaultValue: 'background',
@@ -1138,32 +1147,6 @@ export const Pages: CollectionConfig = {
       admin: {
         description: 'Unpublished pages return a 404 for visitors but remain visible in the admin.',
       },
-    },
-    {
-      name: 'meta',
-      type: 'group',
-      label: 'SEO / Meta',
-      admin: {
-        description: 'Override the default meta title and description for search engines and social sharing.',
-      },
-      fields: [
-        {
-          name: 'title',
-          type: 'text',
-          admin: {
-            description: 'Custom page title for search engines. Leave blank to use the page title above. Aim for 50–60 characters.',
-            placeholder: 'e.g. Mental Health Training for Schools | Justin Axon',
-          },
-        },
-        {
-          name: 'description',
-          type: 'textarea',
-          admin: {
-            description: 'Summary shown in search results. Aim for 140–160 characters.',
-            placeholder: 'e.g. Specialist mental health training for school staff, helping teams support pupils with confidence.',
-          },
-        },
-      ],
     },
     {
       name: 'layout',

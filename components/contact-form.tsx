@@ -15,46 +15,38 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-const serviceOptions = [
-  { value: 'training', label: 'Training' },
-  { value: 'consultancy', label: 'Consultancy' },
-  { value: 'other', label: 'Other' },
-]
+type FieldOption = { label: string; value: string; id?: string }
 
-const sectorOptions = [
-  { value: 'early-years', label: 'Early Years' },
-  { value: 'primary', label: 'Primary Schools' },
-  { value: 'secondary', label: 'Secondary Schools' },
-  { value: 'special-schools', label: 'Special Schools' },
-  { value: 'post-16', label: 'Post-16' },
-  { value: 'alternative-provision', label: 'Alternative Provision' },
-  { value: 'local-authority', label: 'Local Authority Services' },
-  { value: 'health-clinical', label: 'Health & Clinical Services' },
-  { value: 'social-care', label: 'Social Care, Residential & Fostering' },
-  { value: 'activity-providers', label: 'Activity Providers' },
-  { value: 'family-community', label: 'Family & Community Hubs' },
-  { value: 'emergency-services', label: 'Emergency & Frontline Services' },
-  { value: 'customer-experience', label: 'Customer Experience & Public-Facing' },
-  { value: 'parents-carers', label: 'Parents & Carers' },
-  { value: 'corporate-business', label: 'Corporate & Business' },
-  { value: 'workforce-agencies', label: 'Supply, Staffing & Workforce Agencies' },
-  { value: 'other', label: 'Other' },
-]
+type FormField =
+  | { blockType: 'text'; id?: string; name: string; label?: string; required?: boolean; width?: number; defaultValue?: string }
+  | { blockType: 'email'; id?: string; name: string; label?: string; required?: boolean; width?: number }
+  | { blockType: 'textarea'; id?: string; name: string; label?: string; required?: boolean; width?: number; rows?: number }
+  | { blockType: 'select'; id?: string; name: string; label?: string; required?: boolean; width?: number; defaultValue?: string; options?: FieldOption[] }
 
-export function ContactForm() {
-  const [formState, setFormState] = useState({
-    name: '',
-    organisation: '',
-    email: '',
-    phone: '',
-    service: '',
-    sector: '',
-    message: '',
-    preferredContact: '',
-  })
+export type FormDefinition = {
+  id: string
+  fields?: FormField[]
+  submitButtonLabel?: string
+}
+
+interface ContactFormProps {
+  form: FormDefinition
+}
+
+export function ContactForm({ form }: ContactFormProps) {
+  const fields = (form.fields ?? []) as FormField[]
+
+  const [values, setValues] = useState<Record<string, string>>(() =>
+    Object.fromEntries(
+      fields.map((f) => [f.name, ('defaultValue' in f && f.defaultValue) ? f.defaultValue : ''])
+    )
+  )
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  const handleChange = (name: string, value: string) =>
+    setValues((prev) => ({ ...prev, [name]: value }))
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -62,16 +54,17 @@ export function ContactForm() {
     setError(null)
 
     try {
-      const res = await fetch('/api/contact-submissions', {
+      const submissionData = Object.entries(values)
+        .filter(([, v]) => v.trim())
+        .map(([field, value]) => ({ field, value }))
+
+      const res = await fetch('/api/form-submissions', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formState),
+        body: JSON.stringify({ form: form.id, submissionData }),
       })
 
-      if (!res.ok) {
-        throw new Error('Failed to submit. Please try again or email directly.')
-      }
-
+      if (!res.ok) throw new Error('Failed to submit. Please try again or email directly.')
       setIsSubmitted(true)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong.')
@@ -80,15 +73,11 @@ export function ContactForm() {
     }
   }
 
-  const handleChange = (field: string, value: string) => {
-    setFormState((prev) => ({ ...prev, [field]: value }))
-  }
-
   if (isSubmitted) {
     return (
-      <div className="text-center py-12">
-        <h2 className="text-2xl font-bold text-foreground mb-4">Thank You!</h2>
-        <p className="text-muted-foreground mb-8">
+      <div className="py-12 text-center">
+        <h2 className="mb-4 text-2xl font-bold text-foreground">Thank You!</h2>
+        <p className="mb-8 text-muted-foreground">
           Your message has been received. I aim to respond to enquiries within 48 hours.
         </p>
         <div className="flex flex-wrap justify-center gap-4">
@@ -103,113 +92,88 @@ export function ContactForm() {
     )
   }
 
+  // Group consecutive half-width fields into pairs for two-column layout
+  const rows: FormField[][] = []
+  let pair: FormField[] = []
+  for (const field of fields) {
+    const isHalf = (field.width ?? 100) <= 50
+    if (isHalf) {
+      pair.push(field)
+      if (pair.length === 2) { rows.push([...pair]); pair = [] }
+    } else {
+      if (pair.length) { rows.push([...pair]); pair = [] }
+      rows.push([field])
+    }
+  }
+  if (pair.length) rows.push([...pair])
+
+  const renderField = (field: FormField) => {
+    const id = `field-${field.name}`
+    const label = field.label || field.name
+    const value = values[field.name] ?? ''
+
+    if (field.blockType === 'select') {
+      return (
+        <div key={field.name} className="space-y-2">
+          <Label htmlFor={id}>{label}{field.required && ' *'}</Label>
+          <Select value={value} onValueChange={(v) => handleChange(field.name, v)}>
+            <SelectTrigger id={id}>
+              <SelectValue placeholder={`Select ${label.toLowerCase()}`} />
+            </SelectTrigger>
+            <SelectContent>
+              {(field.options ?? []).map((opt) => (
+                <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )
+    }
+
+    if (field.blockType === 'textarea') {
+      return (
+        <div key={field.name} className="space-y-2">
+          <Label htmlFor={id}>{label}{field.required && ' *'}</Label>
+          <Textarea
+            id={id}
+            required={field.required}
+            rows={field.rows ?? 5}
+            value={value}
+            onChange={(e) => handleChange(field.name, e.target.value)}
+            placeholder={`Enter your ${label.toLowerCase()}`}
+          />
+        </div>
+      )
+    }
+
+    return (
+      <div key={field.name} className="space-y-2">
+        <Label htmlFor={id}>{label}{field.required && ' *'}</Label>
+        <Input
+          id={id}
+          type={field.blockType === 'email' ? 'email' : 'text'}
+          required={field.required}
+          value={value}
+          onChange={(e) => handleChange(field.name, e.target.value)}
+          placeholder={`Your ${label.toLowerCase()}`}
+        />
+      </div>
+    )
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="name">Name *</Label>
-          <Input
-            id="name"
-            required
-            value={formState.name}
-            onChange={(e) => handleChange('name', e.target.value)}
-            placeholder="Your full name"
-          />
+      {rows.map((row, i) => (
+        <div key={i} className={row.length === 2 ? 'grid gap-6 md:grid-cols-2' : undefined}>
+          {row.map((field) => renderField(field))}
         </div>
-        <div className="space-y-2">
-          <Label htmlFor="organisation">Organisation / Role</Label>
-          <Input
-            id="organisation"
-            value={formState.organisation}
-            onChange={(e) => handleChange('organisation', e.target.value)}
-            placeholder="Your organisation or role"
-          />
-        </div>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="email">Email *</Label>
-          <Input
-            id="email"
-            type="email"
-            required
-            value={formState.email}
-            onChange={(e) => handleChange('email', e.target.value)}
-            placeholder="your.email@example.com"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="phone">Phone</Label>
-          <Input
-            id="phone"
-            type="tel"
-            value={formState.phone}
-            onChange={(e) => handleChange('phone', e.target.value)}
-            placeholder="Your phone number"
-          />
-        </div>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="service">Which service are you interested in?</Label>
-          <Select value={formState.service} onValueChange={(value) => handleChange('service', value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select a service" />
-            </SelectTrigger>
-            <SelectContent>
-              {serviceOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="sector">Which sector?</Label>
-          <Select value={formState.sector} onValueChange={(value) => handleChange('sector', value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select your sector" />
-            </SelectTrigger>
-            <SelectContent>
-              {sectorOptions.map((option) => (
-                <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="message">Brief description of your needs *</Label>
-        <Textarea
-          id="message"
-          required
-          rows={5}
-          value={formState.message}
-          onChange={(e) => handleChange('message', e.target.value)}
-          placeholder="Tell me a little about what you're looking for, including any specific focus areas or preferred dates..."
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="preferredContact">Preferred contact times</Label>
-        <Input
-          id="preferredContact"
-          value={formState.preferredContact}
-          onChange={(e) => handleChange('preferredContact', e.target.value)}
-          placeholder="e.g., Mornings, After 3pm, Anytime"
-        />
-      </div>
+      ))}
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 
       <Button type="submit" size="lg" disabled={isSubmitting} className="w-full md:w-auto">
-        {isSubmitting ? 'Sending...' : (
-          <>
-            Send Message
-            <Send className="ml-2 h-5 w-5" />
-          </>
+        {isSubmitting ? 'Sending…' : (
+          <>{form.submitButtonLabel || 'Send Message'}<Send className="ml-2 h-5 w-5" /></>
         )}
       </Button>
     </form>

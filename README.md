@@ -51,6 +51,8 @@ Schema migrations run automatically at deploy time via the `ci` script (`payload
 | UI components | shadcn/ui (Radix primitives) | — |
 | Rich text | Lexical (`@payloadcms/richtext-lexical`) | 3.84.1 |
 | Live preview | `@payloadcms/live-preview-react` | 3.84.1 |
+| Forms | `@payloadcms/plugin-form-builder` | 3.84.1 |
+| SEO | `@payloadcms/plugin-seo` | 3.84.1 |
 | Package manager | pnpm | — |
 | Runtime | React 19, Node.js ≥ 20 | — |
 
@@ -69,26 +71,26 @@ Schema migrations run automatically at deploy time via the `ci` script (`payload
 │   └── (payload)/
 │       ├── admin/            # PayloadCMS admin panel (/admin)
 │       └── api/
-│           └── seed/         # One-time data seeding endpoint
+│           └── seed/         # Initial data seeding endpoint
 ├── collections/              # Payload collection definitions
 │   ├── Pages.ts
 │   ├── TrainingAreas.ts
 │   ├── Testimonials.ts
 │   ├── Media.ts
-│   ├── Users.ts
-│   └── ContactSubmissions.ts
+│   └── Users.ts
 ├── globals/                  # Payload global definitions
 │   ├── SiteSettings.ts
 │   └── Navigation.ts
 ├── components/
 │   ├── page-blocks-renderer.tsx   # Client component — renders all page blocks + live preview
 │   ├── payload-page-renderer.tsx  # Server component — fetches data, passes to renderer
+│   ├── contact-form.tsx           # Dynamic form renderer — driven by the CMS form definition
 │   ├── header.tsx
 │   └── footer.tsx
 ├── lib/
 │   ├── seed-data.ts          # Seed content for all pages
 │   └── site-data.ts          # Helper to fetch globals (settings, nav)
-└── payload.config.ts         # Payload configuration
+└── payload.config.ts         # Payload configuration (plugins, collections, email)
 ```
 
 ---
@@ -104,7 +106,10 @@ Schema migrations run automatically at deploy time via the `ci` script (`payload
 | Testimonials | `testimonials` | Client testimonials with `featured` flag |
 | Media | `media` | Image uploads (stored on Vercel Blob) |
 | Users | `users` | Admin panel users |
-| Contact Submissions | `contact-submissions` | Read-only form submissions from the website |
+| Forms | `forms` | Contact form definition (created by the form builder plugin) |
+| Form Submissions | `form-submissions` | Enquiries from the website contact form |
+
+> `Forms` and `Form Submissions` are created automatically by `@payloadcms/plugin-form-builder`. The contact form definition is seeded via the seed endpoint. An email notification is sent to `CONTACT_NOTIFY_EMAIL` on every new submission.
 
 ### Globals
 
@@ -129,8 +134,18 @@ Pages are built by combining blocks in the CMS. Available blocks:
 | Training Areas Feed | Auto-populated feed from the Training Areas collection |
 | Testimonials Feed | Auto-populated feed from the Testimonials collection |
 | Pricing Table | Pricing categories with items and additional costs |
-| Contact Section | Contact form + contact details sidebar |
+| Contact Section | Contact form (linked to a CMS form) + contact details sidebar |
 | Steps | Numbered step-by-step process block |
+
+### SEO
+
+Every page in the `pages` collection has a **SEO** tab powered by `@payloadcms/plugin-seo`. Fields:
+
+- **Meta Title** — overrides the page title in search results (50–60 characters recommended). An auto-generate button fills it from the page title.
+- **Meta Description** — shown in search results (140–160 characters). Fill this manually.
+- **Meta Image** — optional OG image for social sharing; uses the Media collection.
+
+The SEO tab also shows a live search-result preview as you type.
 
 ---
 
@@ -185,13 +200,29 @@ Visit `/admin` and follow the on-screen prompt to create the initial user.
 
 ### 5. Seed content
 
-After creating the admin user, seed all pages, training areas, testimonials, navigation and site settings:
+After creating the admin user, seed all pages, training areas, testimonials, navigation, site settings, and the contact form:
 
 ```
 GET http://localhost:3000/api/seed?secret=<your-PAYLOAD_SECRET>
 ```
 
-This is an upsert — safe to run multiple times. It will not re-create training areas or testimonials if they already exist.
+The seed endpoint is **create-only** — it never overwrites data that already exists in the database. Each section reports whether it was created or skipped. It is safe to run multiple times and safe to run against the production database.
+
+The response JSON includes a `results` object showing what happened per section, e.g.:
+
+```json
+{
+  "success": true,
+  "results": {
+    "trainingAreas": "Created 24",
+    "testimonials": "Created 8",
+    "siteSettings": "Created",
+    "pages": "Created 7, skipped 0",
+    "navigation": "Created",
+    "contactForm": "Created"
+  }
+}
+```
 
 ---
 
@@ -205,6 +236,23 @@ pnpm migrate              # Run pending migrations
 ```
 
 Run `generate:types` and `generate:importmap` whenever collection/block schemas change, then restart the dev server.
+
+---
+
+## Contact form
+
+The contact form is fully CMS-driven. Here is the end-to-end flow:
+
+1. In the admin, a **Contact Section** block has a **Form** relation field. Select the "Contact Enquiry Form" (created by the seed) to link it.
+2. The page is fetched server-side at depth 2, so the full form document — including its field definitions — is embedded in the block data passed to the client.
+3. `components/contact-form.tsx` reads `form.fields` from the block and renders each field dynamically: `text`/`email` → Input, `textarea` → Textarea, `select` → Radix Select. Fields with `width: 50` are paired into a two-column grid.
+4. On submit, the component POSTs directly to `POST /api/form-submissions` (the Payload REST endpoint created by the plugin) with `{ form: formId, submissionData: [{field, value}] }`.
+5. A `formSubmissionOverrides.hooks.afterChange` hook in `payload.config.ts` fires and sends an email notification to `CONTACT_NOTIFY_EMAIL` via Resend.
+6. All submissions are visible in the admin panel under **Form Submissions**.
+
+**Managing form fields:** Edit the "Contact Enquiry Form" in the admin under **Forms**. Add, remove, or reorder fields and they will appear on the website immediately on next page load — no code changes needed.
+
+**Existing installations:** If the contact page already existed before this feature was added, the Form relation on the Contact Section block will be empty. Go to Pages → Contact → Contact Section block → select "Contact Enquiry Form" → save.
 
 ---
 
@@ -241,8 +289,10 @@ Set `NEXT_PUBLIC_SERVER_URL` to the production domain (`https://justinaxontraini
 
 All content is managed through the admin panel at `/admin`. Key areas:
 
-- **Pages** — edit any page by clicking it, then expand blocks in the Layout section. Use the Live Preview button (top right) to see changes before saving.
+- **Pages** — edit any page by clicking it, then expand blocks in the Layout section. Use the Live Preview button (top right) to see changes before saving. Each page also has an **SEO** tab for meta title, description, and social image.
 - **Training Areas** — add or edit sectors. Slug is auto-generated from the title on creation.
 - **Testimonials** — mark testimonials as Featured to give them visual prominence on the testimonials page.
+- **Forms** — edit the "Contact Enquiry Form" to add, remove, or reorder fields on the contact page. Changes are reflected immediately on the live site.
+- **Form Submissions** — read-only view of all contact enquiries submitted via the website.
 - **Site Settings** — logo, contact details, availability text, footer description.
 - **Navigation** — header menu items and footer link columns.
