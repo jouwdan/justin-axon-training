@@ -25,6 +25,7 @@ export const ContactSubmissions: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     defaultColumns: ['name', 'email', 'service', 'sector', 'createdAt'],
+    description: 'Enquiries submitted via the website contact form. These records are read-only — edit enquiries are not expected. An email notification is sent automatically on each new submission.',
   },
   access: {
     create: () => true,
@@ -37,19 +38,23 @@ export const ContactSubmissions: CollectionConfig = {
       name: 'name',
       type: 'text',
       required: true,
+      admin: { readOnly: true },
     },
     {
       name: 'organisation',
       type: 'text',
+      admin: { readOnly: true },
     },
     {
       name: 'email',
       type: 'email',
       required: true,
+      admin: { readOnly: true },
     },
     {
       name: 'phone',
       type: 'text',
+      admin: { readOnly: true },
     },
     {
       name: 'service',
@@ -59,6 +64,7 @@ export const ContactSubmissions: CollectionConfig = {
         { label: 'Consultancy', value: 'consultancy' },
         { label: 'Other', value: 'other' },
       ],
+      admin: { readOnly: true },
     },
     {
       name: 'sector',
@@ -82,16 +88,19 @@ export const ContactSubmissions: CollectionConfig = {
         { label: 'Supply, Staffing & Workforce Agencies', value: 'workforce-agencies' },
         { label: 'Other', value: 'other' },
       ],
+      admin: { readOnly: true },
     },
     {
       name: 'message',
       type: 'textarea',
       required: true,
+      admin: { readOnly: true },
     },
     {
       name: 'preferredContact',
       type: 'text',
       label: 'Preferred Contact Times',
+      admin: { readOnly: true },
     },
   ],
   hooks: {

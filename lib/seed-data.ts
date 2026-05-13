@@ -598,6 +598,19 @@ type SeedNavigationColumn = {
   items: SeedNavigationItem[]
 }
 
+const mkText = (text: string, format = 0) => ({ detail: 0, format, mode: 'normal', style: '', text, type: 'text', version: 1 })
+const mkParagraph = (text: string) => ({ children: [mkText(text)], direction: 'ltr', format: '', indent: 0, type: 'paragraph', version: 1 })
+const mkListItem = (text: string, value: number) => ({ children: [mkText(text)], direction: 'ltr', format: '', indent: 0, type: 'listitem', version: 1, value })
+const mkBulletList = (items: string[]) => ({ children: items.map((t, i) => mkListItem(t, i + 1)), direction: 'ltr', format: '', indent: 0, listType: 'bullet', start: 1, tag: 'ul', type: 'list', version: 1 })
+const mkRoot = (nodes: object[]) => ({ root: { children: nodes, direction: 'ltr', format: '', indent: 0, type: 'root', version: 1 } })
+const paragraphsToBody = (texts: string[]) => mkRoot(texts.map(mkParagraph))
+const serviceToBody = (description: string, includes: { text: string }[], outcome: string) => {
+  const nodes: object[] = [mkParagraph(description)]
+  if (includes.length > 0) nodes.push(mkBulletList(includes.map((i) => i.text)))
+  if (outcome) nodes.push({ children: [mkText('Outcome: ', 1), mkText(outcome)], direction: 'ltr', format: '', indent: 0, type: 'paragraph', version: 1 })
+  return mkRoot(nodes)
+}
+
 const makeButtons = (buttons: SeedButton[]) => buttons.map((button) => ({ ...button }))
 
 export const seedPages: SeedPage[] = [
@@ -623,11 +636,7 @@ export const seedPages: SeedPage[] = [
       {
         blockType: 'content',
         heading: seedHomePage.whatIDoTitle,
-        paragraphs: [
-          { text: seedHomePage.whatIDoParagraph1 },
-          { text: seedHomePage.whatIDoParagraph2 },
-          { text: seedHomePage.whatIDoCardText },
-        ],
+        body: paragraphsToBody([seedHomePage.whatIDoParagraph1, seedHomePage.whatIDoParagraph2, seedHomePage.whatIDoCardText]),
         maxWidth: '5xl',
         background: 'background',
       },
@@ -638,7 +647,7 @@ export const seedPages: SeedPage[] = [
         columns: '3',
         cards: seedHomePage.sectors.map((sector) => ({
           title: sector.title,
-          description: sector.description,
+          body: paragraphsToBody([sector.description]),
           href: sector.href,
           linkLabel: 'View sector',
           icon: sector.icon,
@@ -689,13 +698,13 @@ export const seedPages: SeedPage[] = [
         blockType: 'profileIntro',
         imageUrl: seedAboutPage.photoUrl,
         imageAlt: 'Justin Axon - Trainer and Consultant',
-        paragraphs: [seedAboutPage.bio1, seedAboutPage.bio2, seedAboutPage.bio3].map((text) => ({ text })),
+        body: paragraphsToBody([seedAboutPage.bio1, seedAboutPage.bio2, seedAboutPage.bio3]),
         background: 'background',
       },
       {
         blockType: 'content',
         heading: seedAboutPage.valuesTitle,
-        paragraphs: [{ text: seedAboutPage.valuesText }],
+        body: paragraphsToBody([seedAboutPage.valuesText]),
         style: 'card',
         background: 'background',
       },
@@ -706,7 +715,7 @@ export const seedPages: SeedPage[] = [
         columns: '3',
         cards: seedAboutPage.guidingPrinciples.map((principle) => ({
           title: principle.title,
-          description: principle.description,
+          body: paragraphsToBody([principle.description]),
           icon: principle.icon,
         })),
         background: 'muted',
@@ -714,7 +723,7 @@ export const seedPages: SeedPage[] = [
       {
         blockType: 'content',
         heading: seedAboutPage.howIWorkTitle,
-        paragraphs: [seedAboutPage.howIWork1, seedAboutPage.howIWork2, seedAboutPage.howIWork3].map((text) => ({ text })),
+        body: paragraphsToBody([seedAboutPage.howIWork1, seedAboutPage.howIWork2, seedAboutPage.howIWork3]),
         background: 'background',
       },
       {
@@ -725,7 +734,7 @@ export const seedPages: SeedPage[] = [
       {
         blockType: 'content',
         heading: seedAboutPage.fullBioTitle,
-        paragraphs: [seedAboutPage.fullBio1, seedAboutPage.fullBio2, seedAboutPage.fullBio3].map((text) => ({ text })),
+        body: paragraphsToBody([seedAboutPage.fullBio1, seedAboutPage.fullBio2, seedAboutPage.fullBio3]),
         background: 'muted',
       },
     ],
@@ -784,7 +793,7 @@ export const seedPages: SeedPage[] = [
       },
       {
         blockType: 'content',
-        paragraphs: [{ text: seedConsultancyPage.introText }],
+        body: paragraphsToBody([seedConsultancyPage.introText]),
         maxWidth: '3xl',
         background: 'background',
       },
@@ -795,9 +804,7 @@ export const seedPages: SeedPage[] = [
         cards: seedConsultancyPage.services.map((service) => ({
           anchorId: service.id,
           title: service.title,
-          description: service.description,
-          bullets: service.includes,
-          outcome: service.outcome,
+          body: serviceToBody(service.description, service.includes, service.outcome),
           icon:
             service.id === 'audits'
               ? 'ClipboardCheck'
